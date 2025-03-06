@@ -12,7 +12,7 @@ include { KOFAM_GENERATION                         } from "../subworkflows/kofam
 
 include { METADATA_LOG } from '../modules/local/metadata_log/main.nf'
 
-workflow TAXDB_GENERATION_PIPELINE_V6 {
+workflow REFERENCE_DATABASES_PREPROCESSING {
     if (params.generate_amplicon_db) {
         silva_taxdump = file(params.silva_download_taxdump, checkIfExists: true)
 
