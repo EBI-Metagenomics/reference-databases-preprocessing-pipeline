@@ -20,12 +20,12 @@ Run this command with the flags for generation of the databases you need:
 
 ```
 nextflow run main.nf \
-    --generate_amplicon_db true \
-    --generate_uniref90_db true \
-    --generate_kofam_db true
+    --generate_amplicon_db \
+    --generate_uniref90_db \
+    --generate_kofam_db
 ```
 
-`--generate_amplicon_db true` enable preprocessing of ITSone, PR2, RFAM, SILVA-LSU, SILVA-SSU and UNITE databases, required for taxonomic analysis in MGnify amplicon pipeline. It generates output like this, one subdirectory for each database:
+`--generate_amplicon_db` enable preprocessing of ITSone, PR2, RFAM, SILVA-LSU, SILVA-SSU and UNITE databases, required for taxonomic analysis in MGnify amplicon pipeline. It generates output like this, one subdirectory for each database:
 
 ```
 ├── ITSone
@@ -59,7 +59,7 @@ nextflow run main.nf \
         └── UNITE-tax.txt
 ```
 
-`--generate_rhea_tax_db true` enable preprocessing of UniRef90 and RHEA database to produce MGnify custom DB for RHEA reactions annotation, and also UniRef90 and NCBI taxonomy to generate CAT_pack database for taxonomic classification of contigs. It generates the following output structure:
+`--generate_rhea_tax_db` enable preprocessing of UniRef90 and RHEA database to produce MGnify custom DB for RHEA reactions annotation, and also UniRef90 and NCBI taxonomy to generate CAT_pack database for taxonomic classification of contigs. It generates the following output qstructure:
 ```
 ├── uniref90_rhea
 │   └── 2024_05
@@ -75,7 +75,7 @@ nextflow run main.nf \
             ├── names.dmp
             └── nodes.dmp
 ```
-`--generate_kofam_db true` enable preprocessing of KOFAM Koala and generation of the database of HMM profiles for `hmmscan`. The output structure is as follows:
+`--generate_kofam_db` enable preprocessing of KOFAM Koala and generation of the database of HMM profiles for `hmmscan`. The output structure is as follows:
 ```
 └── kofam
     └── 2025-01-22
