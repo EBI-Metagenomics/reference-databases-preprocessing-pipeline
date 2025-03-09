@@ -1,4 +1,4 @@
-# reference-databases-preprocessing-pipeline
+# Reference databases preprocessing pipeline
 
 Nextflow workflow used to preprocess various reference database files in use by MGnify analysis pipelines.
 
