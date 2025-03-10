@@ -6,7 +6,7 @@ process ADD_METADATA_TO_HMM {
 
     input:
     path ko_hmm_dir
-    val ko_list
+    path ko_list
 
     output:
     path "kofam_modified", emit: kofam_modified
