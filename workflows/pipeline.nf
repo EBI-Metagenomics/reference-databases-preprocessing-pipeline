@@ -10,7 +10,7 @@ include { RFAM_GENERATION                          } from "../subworkflows/rfam_
 include { RHEA_AND_TAXONOMY_GENERATION             } from "../subworkflows/rhea_and_taxonomy_generation/main.nf"
 include { KOFAM_GENERATION                         } from "../subworkflows/kofam_generation/main.nf"
 
-include { METADATA_LOG } from '../modules/local/metadata_log/main.nf'
+include { METADATA_LOG                             } from '../modules/local/metadata_log/main.nf'
 
 workflow REFERENCE_DATABASES_PREPROCESSING {
     if (params.generate_amplicon_db) {
@@ -38,11 +38,11 @@ workflow REFERENCE_DATABASES_PREPROCESSING {
 
         RFAM_GENERATION()
 
-        METADATA_LOG()    
+        METADATA_LOG()
     }
     
     if (params.generate_uniref90_db) {
-        RHEA_AND_TAXONOMY_GENERATION(      
+        RHEA_AND_TAXONOMY_GENERATION(
             file(params.uniref90_fasta_link, checkIfExists: true),
             file(params.uniprot_rhea_mapping, checkIfExists: true),
             file(params.rhea_chebi_mapping_link, checkIfExists: true),
@@ -51,7 +51,7 @@ workflow REFERENCE_DATABASES_PREPROCESSING {
     }
 
     if (params.generate_kofam_db) {
-        KOFAM_GENERATION(      
+        KOFAM_GENERATION(
             file(params.kofam_ko_hmm_link, checkIfExists: true),
             file(params.kofam_ko_list_link, checkIfExists: true),
         )
