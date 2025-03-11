@@ -9,7 +9,7 @@ process ADD_METADATA_TO_HMM {
     path ko_list
 
     output:
-    path "kofam_modified", emit: kofam_modified
+    path "kofam_modified.hmm", emit: kofam_modified
     path "versions.yml"  , emit: versions
 
     script:
@@ -23,7 +23,7 @@ process ADD_METADATA_TO_HMM {
 
     add_metadata_to_hmm.py ${ko_list} ${ko_hmm_input}
 
-    cat *.modified.hmm > kofam_modified
+    cat *.modified.hmm > kofam_modified.hmm
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -33,7 +33,7 @@ process ADD_METADATA_TO_HMM {
 
     stub:
     """
-    touch kofam_modified
+    touch kofam_modified.hmm
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
