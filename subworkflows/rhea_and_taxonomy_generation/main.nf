@@ -1,5 +1,5 @@
 include { UNIREF90_RHEA_FILTER      } from '../../modules/local/uniref90_rhea_filter/main.nf'
-include { UNIREF90_NON_VIRAL_FILTER } from '../../modules/local/uniref90_non_viral_filter/main.nf'
+include { UNIREF90_TAXONOMY_FILTER } from '../../modules/local/uniref90_taxonomy_filter/main.nf'
 include { REFORMAT_RHEA_CHEBI       } from '../../modules/local/reformat_rhea_chebi/main.nf'
 include { EXTRACT_TAXDUMP           } from '../../modules/local/extract_taxdump/main.nf'
 include { DIAMOND_MAKEDB            } from '../../modules/nf-core/diamond/makedb/main.nf'
@@ -27,26 +27,26 @@ workflow RHEA_AND_TAXONOMY_GENERATION {
             .splitFasta(by: params.uniref90_batch_size, file: 'uniref90')
             .set { uniref90_batches_ch }
 
-        UNIREF90_NON_VIRAL_FILTER(uniref90_batches_ch)
+        UNIREF90_TAXONOMY_FILTER(uniref90_batches_ch)
 
-        UNIREF90_NON_VIRAL_FILTER.out.filtered_proteins
-            .collectFile(name: 'uniref90_non_viral.fasta')
+        UNIREF90_TAXONOMY_FILTER.out.filtered_proteins
+            .collectFile(name: 'uniref90_filtered.fasta')
             .map { filepath ->
                 [[id: "${params.uniref90_version}"], filepath]
             }
-            .set { uniref90_non_viral_ch }
+            .set { uniref90_filtered_ch }
 
-        UNIREF90_NON_VIRAL_FILTER.out.protid2taxid
-            .collectFile(name: 'uniref90_non_viral.protid2taxid')
-            .set { uniref90_non_viral_mapping_ch }
+        UNIREF90_TAXONOMY_FILTER.out.protid2taxid
+            .collectFile(name: 'uniref90_filtered.protid2taxid')
+            .set { uniref90_filtered_mapping_ch }
 
         EXTRACT_TAXDUMP(ncbi_taxdump)
 
         CATPACK_PREPARE(
-            uniref90_non_viral_ch,
+            uniref90_filtered_ch,
             EXTRACT_TAXDUMP.out.tax_names,
             EXTRACT_TAXDUMP.out.tax_nodes,
-            uniref90_non_viral_mapping_ch
+            uniref90_filtered_mapping_ch
         )
 
         REFORMAT_RHEA_CHEBI(txt_rhea_chebi_mapping)

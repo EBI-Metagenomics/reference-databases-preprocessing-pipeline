@@ -1,4 +1,4 @@
-process UNIREF90_NON_VIRAL_FILTER {
+process UNIREF90_TAXONOMY_FILTER {
     label 'process_single'
     container 'community.wave.seqera.io/library/pip_biopython_pyfastx_taxoniq:c440284a61b91ed0'
 
@@ -12,7 +12,7 @@ process UNIREF90_NON_VIRAL_FILTER {
 
     script:
     """
-    uniref90_non_viral_filter.py ${uniref90_fasta} uniref90
+    uniref90_taxonomy_filter.py ${uniref90_fasta} uniref90
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

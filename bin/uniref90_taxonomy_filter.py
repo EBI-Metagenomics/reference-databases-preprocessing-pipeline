@@ -23,21 +23,23 @@ import taxoniq
 # Global cache to store TaxID search results
 taxid_cache = {}
 
-def is_virus_taxoniq(tax_id):
+UNWANTED_TAXIDS = ["Viruses", "unclassified entries"]
+
+def is_unwanted_taxoniq(tax_id):
     """
-    Check if taxa id is virus using faster taxoniq search in local, 
+    Check if taxa id is among UNWANTED_TAXIDS using faster taxoniq search in local, 
     indexed, compressed copy of the NCBI taxonomy database
     """
     taxon = taxoniq.Taxon(tax_id)
     if taxon.ranked_lineage:
         highest_taxon = taxon.ranked_lineage[-1]
         if highest_taxon.rank.name == "superkingdom":
-            return highest_taxon.scientific_name == "Viruses"
+            return highest_taxon.scientific_name in UNWANTED_TAXIDS
     raise ValueError("No information about the lineage in taxoniq")
 
-def is_virus_entrez(taxid):
+def is_unwanted_entrez(taxid):
     """
-    Check if taxa id is virus using slower approach with Entrez querying
+    Check if taxa id is among UNWANTED_TAXIDS using slower approach with Entrez querying
     """
     handle = Entrez.efetch(db="taxonomy", id=taxid, retmode="xml")
     records = Entrez.read(handle)
@@ -45,9 +47,9 @@ def is_virus_entrez(taxid):
 
     lineage = records[0]["Lineage"]
     highest_taxon = lineage.split("; ")[0]
-    return highest_taxon == "Viruses"
+    return highest_taxon in UNWANTED_TAXIDS
 
-def is_virus(tax_id):
+def is_unwanted(tax_id):
     """
     Wrapper function that checks cache before querying taxoniq or Entrez.
     Caches the result to avoid redundant queries.
@@ -55,27 +57,26 @@ def is_virus(tax_id):
     if tax_id in taxid_cache:
         return taxid_cache[tax_id]
 
-    is_viral = False
+    is_unwanted = False
     try:
-        is_viral = is_virus_taxoniq(tax_id)
+        is_unwanted = is_unwanted_taxoniq(tax_id)
     except (KeyError, ValueError):
         # If taxoniq fails, fallback to Entrez
-        is_viral = is_virus_entrez(tax_id)
+        is_unwanted = is_unwanted_entrez(tax_id)
 
     # Cache the result
-    taxid_cache[tax_id] = is_viral
-    return is_viral
+    taxid_cache[tax_id] = is_unwanted
+    return is_unwanted
 
 def filter_fasta(fasta, err_handle):
     """
-    Filter viral proteins from FASTA using TaxID field.
-    Returns a list of records that are non-viral.
+    Remove proteins with UNWANTED_TAXIDS from FASTA using TaxID field.
+    Returns a list of filtered records.
     """
     for seq in fasta:
         try:
             tax_id = seq.description.split("TaxID=")[1].split()[0]
-            is_viral_protein = is_virus(tax_id)
-            if not is_viral_protein:
+            if not is_unwanted(tax_id):
                 yield seq, tax_id
         except Exception as e:
             err_handle.write(f"Error while processing {tax_id}: {e}\n")
@@ -99,7 +100,7 @@ def processing_handle(input_fasta, output_prefix):
             mapping_handle.write(f"{seq.name}\t{tax_id}\n")
 
 def main():
-    parser = argparse.ArgumentParser(description="Remove viral proteins from FASTA using TaxID field")
+    parser = argparse.ArgumentParser(description="Remove viral proteins and proteins that taxonomically classified as 'metagenomes' from FASTA using TaxID field")
     parser.add_argument('input_fasta', type=str, help='Input FASTA file to be cleaned (can be .fasta or .fasta.gz)')
     parser.add_argument('output_prefix', type=str, help='Prefix for the output FASTA file with filtered records and mapping of proteins to taxids')
 

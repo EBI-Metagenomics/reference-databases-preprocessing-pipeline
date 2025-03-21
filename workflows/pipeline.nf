@@ -41,7 +41,7 @@ workflow REFERENCE_DATABASES_PREPROCESSING {
         METADATA_LOG()
     }
     
-    if (params.generate_uniref90_db) {
+    if (params.generate_rhea_tax_db) {
         RHEA_AND_TAXONOMY_GENERATION(
             file(params.uniref90_fasta_link, checkIfExists: true),
             file(params.uniprot_rhea_mapping, checkIfExists: true),
