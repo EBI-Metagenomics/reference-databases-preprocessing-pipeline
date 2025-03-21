@@ -59,7 +59,7 @@ nextflow run main.nf \
         └── UNITE-tax.txt
 ```
 
-`--generate_rhea_tax_db` enable preprocessing of UniRef90 and RHEA database to produce MGnify custom DB for RHEA reactions annotation, and also UniRef90 and NCBI taxonomy to generate CAT_pack database for taxonomic classification of contigs. It generates the following output qstructure:
+`--generate_rhea_tax_db` enable preprocessing of UniRef90 and RHEA database to produce MGnify custom DB for RHEA reactions annotation, and also UniRef90 and NCBI taxonomy to generate CAT_pack database for taxonomic classification of contigs. It generates the following output structure:
 ```
 ├── uniref90_rhea
 │   └── 2024_05
