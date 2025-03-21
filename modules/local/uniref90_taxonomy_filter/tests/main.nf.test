@@ -1,10 +1,10 @@
 nextflow_process {
 
-    name "Test Process UNIREF90_NON_VIRAL_FILTER"
+    name "Test Process UNIREF90_TAXONOMY_FILTER"
     script "../main.nf"
-    process "UNIREF90_NON_VIRAL_FILTER"
+    process "UNIREF90_TAXONOMY_FILTER"
 
-    test("Remove viral proteins from protein fasta using TaxID field") {
+    test("Remove unwanted proteins from protein fasta using TaxID field") {
 
         when {
             process {
