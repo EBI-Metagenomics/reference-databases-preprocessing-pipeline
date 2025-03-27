@@ -16,7 +16,7 @@
 
 import argparse
 import csv
-import gzip
+import fileinput
 
 from Bio import SeqIO
 
@@ -38,7 +38,7 @@ def load_mapping(tsv_file):
     return mapping
 
 
-def filter_fasta(in_handle, out_handle, mapping):
+def filter_fasta(in_handle, mapping):
     """
     Filter the FASTA file based on the mapping and add RheaID to the FASTA header.
     Raise an exception if the header is not in the format UniRef90_<prot_id>.
@@ -55,19 +55,8 @@ def filter_fasta(in_handle, out_handle, mapping):
         if prot_id in mapping:
             rhea_id = mapping[prot_id]
             record.description += f' RheaID="{rhea_id}"'
-            SeqIO.write(record, out_handle, "fasta")
+            yield record
 
-
-def processing_handle(input_fasta, output_fasta, mapping):
-    """
-    Enable processing of both regular and gzipped FASTA files.
-    """
-    with open(output_fasta, 'w') as out_handle:
-        if input_fasta.endswith('.gz'):
-            with gzip.open(input_fasta, 'rt') as in_handle:
-                filter_fasta(in_handle, out_handle, mapping)
-        else:
-            filter_fasta(input_fasta, out_handle, mapping)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -81,7 +70,12 @@ def main():
     
     mapping = load_mapping(args.mapping_file)
     
-    processing_handle(args.input_fasta, args.output_fasta, mapping)
+    with (
+        open(args.output_fasta, 'w') as out_handle,
+        fileinput.hook_compressed(args.input_fasta, "rt") as in_handle
+        ):
+        for record in filter_fasta(in_handle, mapping):
+            SeqIO.write(record, out_handle, "fasta")
 
 if __name__ == '__main__':
     main()
