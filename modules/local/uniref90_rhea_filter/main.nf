@@ -1,6 +1,6 @@
 process UNIREF90_RHEA_FILTER {
     label 'process_single'
-    container 'quay.io/biocontainers/biopython:1.78'
+    container 'quay.io/biocontainers/biopython:1.81'
 
     input:
     path uniref90_fasta
