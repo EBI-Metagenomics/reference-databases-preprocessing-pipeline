@@ -16,8 +16,9 @@
 
 import argparse
 import csv
+import fileinput
 
-import pyfastx
+from Bio import SeqIO
 
 
 def load_mapping(tsv_file):
@@ -37,7 +38,7 @@ def load_mapping(tsv_file):
     return mapping
 
 
-def filter_fasta(fasta, mapping):
+def filter_fasta(in_handle, mapping):
     """
     Filter the FASTA file based on the mapping and add RheaID to the FASTA header.
     Raise an exception if the header is not in the format UniRef90_<prot_id>.
@@ -45,26 +46,17 @@ def filter_fasta(fasta, mapping):
     class InvalidProteinIDException(Exception):
         pass
 
-    for seq in fasta:
-        if not seq.name.startswith("UniRef90_") or len(seq.name.split("_")) != 2:
+    for record in SeqIO.parse(in_handle, "fasta"):
+        if not record.id.startswith("UniRef90_") or len(record.id.split("_")) != 2:
             raise InvalidProteinIDException(
-                f"Invalid protein ID format: {seq.name}"
+                f"Invalid protein ID format: {record.id}"
                 )
-        prot_id = seq.name.split("_")[1]
-        if not prot_id.startswith("UPI") and prot_id in mapping:
+        prot_id = record.id.split("_")[1]
+        if prot_id in mapping:
             rhea_id = mapping[prot_id]
-            updated_description = f'{seq.description} RheaID="{rhea_id}"'
-            yield f">{seq.name} {updated_description}\n{seq.seq}\n"
-            
+            record.description += f' RheaID="{rhea_id}"'
+            yield record
 
-def processing_handle(input_fasta, output_fasta, mapping):
-    """
-    Filter the data and  write the output.
-    """
-    fasta = pyfastx.Fasta(input_fasta)
-    with open(output_fasta, 'w') as out_handle:
-        for seq in filter_fasta(fasta, mapping):
-            out_handle.write(seq)
 
 def main():
     parser = argparse.ArgumentParser(
@@ -78,7 +70,12 @@ def main():
     
     mapping = load_mapping(args.mapping_file)
     
-    processing_handle(args.input_fasta, args.output_fasta, mapping)
+    with (
+        open(args.output_fasta, 'w') as out_handle,
+        fileinput.hook_compressed(args.input_fasta, "rt") as in_handle
+        ):
+        for record in filter_fasta(in_handle, mapping):
+            SeqIO.write(record, out_handle, "fasta")
 
 if __name__ == '__main__':
     main()
