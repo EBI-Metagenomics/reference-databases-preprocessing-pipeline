@@ -3,8 +3,10 @@ nextflow_process {
     name "Test Process UNIREF90_RHEA_FILTER"
     script "../main.nf"
     process "UNIREF90_RHEA_FILTER"
+    
+    tag "uniref90"
 
-    test("Remove from protein fasta proteins without Rhea annotation") {
+    test("Run UNIREF90_RHEA_FILTER on uncompressed fasta") {
 
         when {
             params {
@@ -28,4 +30,27 @@ nextflow_process {
 
     }
 
+    test("Run UNIREF90_RHEA_FILTER on fasta.gz") {
+
+        when {
+            params {
+                uniref90_version = "2024_05"
+                rheadb_version = "135"
+                uniprotKB_access_date = "2024-07-31"
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = Channel.fromPath("${moduleDir}/tests/data/uniref90.test.fasta.gz", checkIfExists: true)
+                input[1] = Channel.fromPath("${moduleDir}/tests/data/uniprot_rhea_mapping.test.tsv", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assert process.success
+            assert snapshot(process.out).match()
+        }
+
+    }
 }

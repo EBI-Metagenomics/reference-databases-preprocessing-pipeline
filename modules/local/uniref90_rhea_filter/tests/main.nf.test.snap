@@ -1,5 +1,5 @@
 {
-    "Remove from protein fasta proteins without Rhea annotation": {
+    "Run UNIREF90_RHEA_FILTER on fasta.gz": {
         "content": [
             {
                 "0": [
@@ -20,6 +20,29 @@
             "nf-test": "0.9.0",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-27T17:31:42.305181"
+        "timestamp": "2025-04-03T15:07:43.346908"
+    },
+    "Run UNIREF90_RHEA_FILTER on uncompressed fasta": {
+        "content": [
+            {
+                "0": [
+                    "uniref90_with_rhea.fasta:md5,e0be31822a0d13f2a5dc1fb2afb59bd1"
+                ],
+                "1": [
+                    "versions.yml:md5,8e84bdc6b92f32943eb26ad328df4562"
+                ],
+                "filtered_proteins": [
+                    "uniref90_with_rhea.fasta:md5,e0be31822a0d13f2a5dc1fb2afb59bd1"
+                ],
+                "versions": [
+                    "versions.yml:md5,8e84bdc6b92f32943eb26ad328df4562"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-04-03T15:07:40.079"
     }
 }

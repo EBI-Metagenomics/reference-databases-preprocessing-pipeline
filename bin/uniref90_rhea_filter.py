@@ -72,7 +72,7 @@ def main():
     
     with (
         open(args.output_fasta, 'w') as out_handle,
-        fileinput.hook_compressed(args.input_fasta, "rt") as in_handle
+        fileinput.hook_compressed(args.input_fasta, "r") as in_handle
         ):
         for record in filter_fasta(in_handle, mapping):
             SeqIO.write(record, out_handle, "fasta")

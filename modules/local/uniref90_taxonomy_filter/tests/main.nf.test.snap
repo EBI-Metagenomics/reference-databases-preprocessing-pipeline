@@ -1,5 +1,5 @@
 {
-    "Remove unwanted proteins from protein fasta using TaxID field": {
+    "Run UNIREF90_TAXONOMY_FILTER on fasta.gz": {
         "content": [
             {
                 "0": [
@@ -26,6 +26,35 @@
             "nf-test": "0.9.0",
             "nextflow": "24.10.4"
         },
-        "timestamp": "2025-03-21T15:30:36.402368"
+        "timestamp": "2025-04-03T15:06:22.645545"
+    },
+    "Run UNIREF90_TAXONOMY_FILTER on uncompressed fasta": {
+        "content": [
+            {
+                "0": [
+                    "uniref90.filtered.fasta:md5,e5ee4d75d12e9dd95fd7f7ffe9f32208"
+                ],
+                "1": [
+                    "uniref90.protid2taxid:md5,c05d080f20acf5d54afdcd0c3c40463d"
+                ],
+                "2": [
+                    "versions.yml:md5,cb46d8e9c6c847ee8b5a15bf7e4f96d8"
+                ],
+                "filtered_proteins": [
+                    "uniref90.filtered.fasta:md5,e5ee4d75d12e9dd95fd7f7ffe9f32208"
+                ],
+                "protid2taxid": [
+                    "uniref90.protid2taxid:md5,c05d080f20acf5d54afdcd0c3c40463d"
+                ],
+                "versions": [
+                    "versions.yml:md5,cb46d8e9c6c847ee8b5a15bf7e4f96d8"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-04-03T15:06:18.276799"
     }
 }
