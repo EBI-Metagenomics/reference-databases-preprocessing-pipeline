@@ -1,0 +1,15 @@
+ID   A0A000PNL1_9BACT        Unreviewed;        60 AA.
+AC   A0A000PNL1;
+//
+ID   A0A000KEP1_9BACT        Unreviewed;        60 AA.
+AC   A0A000KEP1;
+DE   SubName: Full=DNA polymerase III subunit beta {ECO:0000313|EMBL:ABC12345.1};
+//
+ID   A0A000PNL2_9BACT        Unreviewed;        60 AA.
+AC   A0A000PNL2;
+//
+ID   A0A000KEP2_9BACT        Unreviewed;        60 AA.
+AC   A0A000KEP2;
+DE   RecName: Full=Genome polyprotein {ECO:0000256|ARBA:ARBA00000001};
+DE   Contains:
+//

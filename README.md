@@ -84,4 +84,20 @@ nextflow run main.nf \
         ├── kofam_modified.h3m
         └── kofam_modified.h3p
 ```
+`--generate_uniref_protnlm_db` enable generation of UniRef90 and UniRef50 DIAMOND databases without the clusters whose representative's protein name was predicted by Google ProtNLM (evidence `ECO:0008006|Google:ProtNLM`), used by mettannotator. UniProt only serves the current release as FASTA, so `--uniref_protnlm_version` must be the current UniProt release (the run stops otherwise), and each release has to be generated while it is current. The output structure is as follows:
+```
+├── protnlm_ids
+│   └── 2026_04
+│       └── protnlm_ids.txt
+├── uniref50_protnlm_filtered
+│   └── 2026_04
+│       ├── db.filtered.dmnd
+│       ├── protnlm_filter_stats.txt
+│       └── VERSION.txt
+└── uniref90_protnlm_filtered
+    └── 2026_04
+        ├── db.filtered.dmnd
+        ├── protnlm_filter_stats.txt
+        └── VERSION.txt
+```
 You will need to modify some values in the `nextflow.config` file to update a new version of the database, change output directory, etc. 

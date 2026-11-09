@@ -1,0 +1,36 @@
+nextflow_process {
+
+    name "Test Process UNIREF_PROTNLM_FILTER"
+    script "../main.nf"
+    process "UNIREF_PROTNLM_FILTER"
+
+    tag "uniref_protnlm"
+
+    test("Run UNIREF_PROTNLM_FILTER on fasta.gz") {
+
+        when {
+            params {
+                uniref_protnlm_version = "2026_04"
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = [[id: "uniref90"], file("${moduleDir}/tests/data/uniref90.test.fasta.gz", checkIfExists: true)]
+                input[1] = file("${moduleDir}/tests/data/protnlm_ids.test.txt", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert path(process.out.filtered_fasta[0][1]).readLines().findAll { line -> line.startsWith(">") }.collect { line -> line.tokenize(" ")[0] } ==
+                    [">UniRef90_A0A000KEP1", ">UniRef90_A0A000KEP2", ">UniRef90_UPI00000000AA"] },
+                { assert path(process.out.stats[0]).readLines() ==
+                    ["clusters_total\t5", "clusters_removed\t2", "clusters_kept\t3", "trembl_protnlm_entries\t2"] },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+}

@@ -9,6 +9,7 @@ include { ITSONEBD_GENERATION                      } from "../subworkflows/itson
 include { RFAM_GENERATION                          } from "../subworkflows/rfam_generation/main.nf"
 include { RHEA_AND_TAXONOMY_GENERATION             } from "../subworkflows/rhea_and_taxonomy_generation/main.nf"
 include { KOFAM_GENERATION                         } from "../subworkflows/kofam_generation/main.nf"
+include { UNIREF_PROTNLM_GENERATION                } from "../subworkflows/uniref_protnlm_generation/main.nf"
 
 include { METADATA_LOG                             } from '../modules/local/metadata_log/main.nf'
 
@@ -54,6 +55,24 @@ workflow REFERENCE_DATABASES_PREPROCESSING {
         KOFAM_GENERATION(
             file(params.kofam_ko_hmm_link, checkIfExists: true),
             file(params.kofam_ko_list_link, checkIfExists: true),
+        )
+    }
+
+    if (params.generate_uniref_protnlm_db) {
+        uniprot_links = [params.trembl_dat_link, params.uniref90_fasta_link, params.uniref50_fasta_link]
+
+        // UniProt only serves the current release, so check it is the one we are labelling the dbs with
+        uniprot_links.each { link ->
+            def release = file(link).parent.resolve('RELEASE.metalink').text.find(/<version>([^<]+)</) { _match, version -> version }
+            if (release != params.uniref_protnlm_version) {
+                error("${link} is UniProt release ${release}, but --uniref_protnlm_version is ${params.uniref_protnlm_version}")
+            }
+        }
+
+        UNIREF_PROTNLM_GENERATION(
+            file(params.trembl_dat_link, checkIfExists: true),
+            file(params.uniref90_fasta_link, checkIfExists: true),
+            file(params.uniref50_fasta_link, checkIfExists: true)
         )
     }
 }
