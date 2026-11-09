@@ -1,0 +1,25 @@
+{
+    "Run PROTNLM_GETIDS on TrEMBL dat.gz": {
+        "content": [
+            {
+                "0": [
+                    "protnlm_ids.txt:md5,cf5a70fb4bf9e5978217163dd7e43d77"
+                ],
+                "1": [
+                    "versions.yml:md5,7d3fba8d7076f5a70a8ef7a77e0a3d4f"
+                ],
+                "protnlm_ids": [
+                    "protnlm_ids.txt:md5,cf5a70fb4bf9e5978217163dd7e43d77"
+                ],
+                "versions": [
+                    "versions.yml:md5,7d3fba8d7076f5a70a8ef7a77e0a3d4f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-11-09T15:21:17.271354"
+    }
+}

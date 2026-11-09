@@ -1,0 +1,47 @@
+{
+    "Run UNIREF_PROTNLM_FILTER on fasta.gz": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "uniref90"
+                        },
+                        "uniref90_protnlm_filtered.fasta:md5,8b52850b86e490fe7800c8c8ac05320a"
+                    ]
+                ],
+                "1": [
+                    "protnlm_filter_stats.txt:md5,e6d61d70d0f2664626ca948ed84451f0"
+                ],
+                "2": [
+                    "VERSION.txt:md5,03d1995e403a496ad1350ceab4f7d124"
+                ],
+                "3": [
+                    "versions.yml:md5,c5c662aed31d8ffda640f91c5e8e592f"
+                ],
+                "filtered_fasta": [
+                    [
+                        {
+                            "id": "uniref90"
+                        },
+                        "uniref90_protnlm_filtered.fasta:md5,8b52850b86e490fe7800c8c8ac05320a"
+                    ]
+                ],
+                "stats": [
+                    "protnlm_filter_stats.txt:md5,e6d61d70d0f2664626ca948ed84451f0"
+                ],
+                "version_file": [
+                    "VERSION.txt:md5,03d1995e403a496ad1350ceab4f7d124"
+                ],
+                "versions": [
+                    "versions.yml:md5,c5c662aed31d8ffda640f91c5e8e592f"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "26.04.3"
+        },
+        "timestamp": "2026-11-09T15:21:21.842163"
+    }
+}

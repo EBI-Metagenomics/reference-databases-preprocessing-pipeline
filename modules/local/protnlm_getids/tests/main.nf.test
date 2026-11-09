@@ -1,0 +1,56 @@
+nextflow_process {
+
+    name "Test Process PROTNLM_GETIDS"
+    script "../main.nf"
+    process "PROTNLM_GETIDS"
+
+    tag "uniref_protnlm"
+
+    test("Run PROTNLM_GETIDS on TrEMBL dat.gz") {
+
+        when {
+            params {
+                uniref_protnlm_version = "2026_04"
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = file("${moduleDir}/tests/data/trembl.test.dat.gz", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                // First top-level name only, each ID once: KEP1 (ProtNLM 2nd name) and KEP2 (ProtNLM in Contains) are kept
+                { assert path(process.out.protnlm_ids[0]).readLines() == ["A0A000PNL1_9BACT", "A0A000PNL2_9BACT"] },
+                { assert snapshot(process.out).match() }
+            )
+        }
+
+    }
+
+    test("Fail PROTNLM_GETIDS when no ProtNLM entries are found") {
+
+        when {
+            params {
+                uniref_protnlm_version = "2026_04"
+                outdir = "${outputDir}"
+            }
+            process {
+                """
+                input[0] = file("${moduleDir}/tests/data/trembl.no_protnlm.test.dat", checkIfExists: true)
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.failed },
+                { assert process.stdout.any { line -> line.contains("No ProtNLM entries found") } }
+            )
+        }
+
+    }
+}

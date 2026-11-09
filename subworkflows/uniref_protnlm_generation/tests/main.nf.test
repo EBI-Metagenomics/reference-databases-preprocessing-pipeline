@@ -1,0 +1,32 @@
+nextflow_workflow {
+
+    name "Test workflow UNIREF_PROTNLM_GENERATION"
+    script "../main.nf"
+    workflow "UNIREF_PROTNLM_GENERATION"
+
+    test("Run UNIREF_PROTNLM_GENERATION on test dataset") {
+
+        when {
+            workflow {
+                """
+                input[0] = file("${moduleDir}/tests/data/trembl.test.dat.gz", checkIfExists: true)
+                input[1] = file("${moduleDir}/tests/data/uniref90.test.fasta", checkIfExists: true)
+                input[2] = file("${moduleDir}/tests/data/uniref50.test.fasta", checkIfExists: true)
+                """
+            }
+            params {
+                uniref_protnlm_version = "2026_04"
+                outdir = "${outputDir}"
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert workflow.out.db.size() == 2 },
+                { assert workflow.out.db.every { db -> file(db[1]).name == "db.filtered.dmnd" } },
+                { assert snapshot(workflow.out.protnlm_ids, workflow.out.stats).match() }
+            )
+        }
+    }
+}
